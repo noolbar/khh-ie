@@ -1,0 +1,24 @@
+{
+  "name": "khh-ie",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "marked": "^0.8.0",
+    "parcel": "^1.12.4",
+    "xhr": "^2.5.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build": "spago bundle-app --to res/app.js",
+    "parcel": "cp -rf res/sample-data dist && parcel res/index.html --no-hmr",
+    "publish": "npm run clean && npm run build && parcel build res/index.html -d publish && cp -rf res/sample-data publish",
+    "clean": "rm -rf publish",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
