@@ -1,0 +1,22 @@
+{
+  "name": "kkh-ie",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "marked": "^0.8.0",
+    "parcel": "^1.12.4",
+    "xhr": "^2.5.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "parcel": "npx parcel distp/index.html --no-hmr",
+    "build": "spago --verbose bundle-app"
+  },
+  "author": "",
+  "license": "ISC"
+}
