@@ -17,11 +17,12 @@ import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
 import Effect.Console (logShow)
 import Effect.Console as Console
-import KKH.Types (Cell(..), Cell'(..), CellOutput(..), CellOutput'(..), Note(..))
+import KKH.Types (Cell(..), Cell'(..), CellOutput(..), CellOutput'(..), Note(..), Showable(..))
 import Simple.JSON as JSON
 import Web.DOM.Document (Document, createElement)
 import Web.DOM.Element as Elem
 import Web.DOM.Node as Node
+import Web.DOM.Text as T
 import Web.HTML as HTML
 import Web.HTML.HTMLDocument as HDoc
 import Web.HTML.HTMLElement as HElem
@@ -37,17 +38,17 @@ main = do
 
   url ← HTML.window >>= Window.location >>= Location.href
   hash ← HTML.window >>= Window.location >>= Location.hash >>= (\hs → pure $ Str.drop 1 hs)
-  
+
   launchAff_ $ do
     result ← AX.request (AX.defaultRequest  { -- url = "/sample-data/1234abc.json"
                                               url = hash
                                             , method = Left GET
                                             , responseFormat = ResponseFormat.string
                                             })
-    liftEffect case maybeBody of 
+    liftEffect case maybeBody of
       Nothing -> Console.error "body is not found"
       Just body -> do
-        pNode <- Elem.toNode <$> createElement "p" document
+        pNode <- Elem.toNode <$> createElement "h1" document
         Node.appendChild pNode (HElem.toNode body) >>=
           Node.setTextContent ("KHH for IE" <> " current url: " <> url <> " hash: " <> hash)
 
@@ -60,15 +61,15 @@ main = do
                 log $ "GET /sample-data response: " <> (unwrap key)
                 void $ traverse (\c → render c document body) cells
               Left err → traverse1_ logShow err
-              
+
   where
-    render ∷ Cell → Document → HElem.HTMLElement → Effect Unit 
+    render ∷ Cell → Document → HElem.HTMLElement → Effect Unit
     render (Cell cell) document body= do
       let getCell (PlainTextCell r) = r
-          getCell (CodeCell r) = r 
-          getCell (MarkDownCell r) = r 
-          getCell (ImagePngCell r) = r 
-          getCell (ImageJpegCell r) = r 
+          getCell (CodeCell r) = r
+          getCell (MarkDownCell r) = r
+          getCell (ImagePngCell r) = r
+          getCell (ImageJpegCell r) = r
           cr = getCell cell
           getOutput (PlainTextOut r) = r
           getOutput (MarkDownOut r) = r
@@ -78,6 +79,25 @@ main = do
           dt output =
             let CellOutput outputs = output
             in getOutput outputs
-      pNode ← Elem.toNode <$> createElement "p" document
-      Node.appendChild pNode (HElem.toNode body) >>=
-        Node.setTextContent ("hash: " <> unwrap cr.key <> " source: " <> cr.source <> " output: " <> foldr (<>) "" (map dt cr.outputs))
+
+          wall str = createElement "p" document >>= \elem → do
+            Elem.setAttribute "id" (unwrap cr.key) elem
+            Elem.setAttribute "style" (showattr str cr.showable) elem
+            pure $ Elem.toNode elem
+
+      celldiv ← Elem.toNode <$> createElement "div" document
+      sNode ← wall "source"
+      Node.setTextContent ("source: " <> cr.source) sNode
+      oNode ← wall "output"
+      Node.setTextContent ("output: " <> foldr (<>) "" (map dt cr.outputs)) oNode
+      div ← Node.appendChild celldiv (HElem.toNode body)
+
+      void $ Node.appendChild sNode div
+      void $ Node.appendChild oNode div
+
+    showattr ∷ String → Showable → String
+    showattr str able = case str, able of
+      _, None → "display: none;"
+      "output", Source → "display: none;"
+      "source", Output → "display: none;"
+      _, _ → "display: block;"

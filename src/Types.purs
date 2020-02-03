@@ -18,7 +18,7 @@ instance readForeignMD5 ∷ ReadForeign MD5 where
 
 type Note' =
   { key ∷ MD5
-  , cells ∷ Array Cell 
+  , cells ∷ Array Cell
   }
 newtype Note = Note Note'
 derive instance newtypeNote :: Newtype Note _
@@ -33,7 +33,7 @@ type NoteJson =
   { key ∷ String
   , cells ∷ Foreign
   }
-    
+
 data Showable = None | Source | Output | SourceOutput
 data Cell'
   = PlainTextCell CellStructure
@@ -64,7 +64,7 @@ instance readForeignCell :: ReadForeign Cell where
   readImpl o = do
     { celltype, key, metadata, showable, source, outputs } ∷ CellJson ← readImpl o
     parse ∷ Array CellOutput ← readImpl outputs
-    let d = { key: MD5 key, metadata, showable: toShowable showable, source, outputs: parse } 
+    let d = { key: MD5 key, metadata, showable: toShowable showable, source, outputs: parse }
     case celltype of
       "PlainTextCell" → pure $ Cell (PlainTextCell d)
       "CodeCell" → pure $ Cell (CodeCell d)
@@ -75,18 +75,18 @@ instance readForeignCell :: ReadForeign Cell where
     where
       toShowable ∷ String → Showable
       toShowable t = case t of
-        "None" → None 
-        "Source" → Source 
-        "Output" → Output 
+        "None" → None
+        "Source" → Source
+        "Output" → Output
         "SourceOutput" → SourceOutput
-        _ → None      
-        
+        _ → None
+
 data CellOutput'
   = PlainTextOut String
   | MarkDownOut String
   | ImagePngOut Base64
   | ImageJpegOut Base64
-  
+
 newtype Base64 = Base64 String
 derive instance newtypeBase64 :: Newtype Base64 _
 

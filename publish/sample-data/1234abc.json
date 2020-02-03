@@ -4,7 +4,7 @@
       { "celltype": "PlainTextCell"
       , "key": "a"
       , "metadata": ""
-      , "showable": "SourcecOutput"
+      , "showable": "SourceOutput"
       , "source":"echo \"done\""
       , "outputs":
           [ { "outputtype" : "PlainTextOut"
@@ -15,17 +15,16 @@
     , { "celltype": "MarkDownCell"
       , "key": "b"
       , "metadata": ""
-      , "showable": "SourcecOutput"
+      , "showable": "SourceOutput"
       , "source": "do"
       , "outputs": []
       }
     , { "celltype": "PlainTextCell"
       , "key": "c"
       , "metadata": ""
-      , "showable": "SourcecOutput"
+      , "showable": "SourceOutput"
       , "source": "test"
       , "outputs": []
       }
     ]
 }
-  

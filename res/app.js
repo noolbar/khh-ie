@@ -4663,6 +4663,9 @@ var PS = {};
   var newtypeBase64 = new Data_Newtype.Newtype(function (n) {
       return n;
   }, Base64);
+  exports["None"] = None;
+  exports["Source"] = Source;
+  exports["Output"] = Output;
   exports["PlainTextCell"] = PlainTextCell;
   exports["CodeCell"] = CodeCell;
   exports["MarkDownCell"] = MarkDownCell;
@@ -4698,6 +4701,20 @@ var PS = {};
 (function(exports) {
   "use strict";
 
+  exports.setAttribute = function (name) {
+    return function (value) {
+      return function (element) {
+        return function () {
+          element.setAttribute(name, value);
+          return {};
+        };
+      };
+    };
+  };
+})(PS["Web.DOM.Element"] = PS["Web.DOM.Element"] || {});
+(function(exports) {
+  "use strict";
+
   // module Unsafe.Coerce
 
   exports.unsafeCoerce = function (x) {
@@ -4717,9 +4734,11 @@ var PS = {};
   "use strict";
   $PS["Web.DOM.Element"] = $PS["Web.DOM.Element"] || {};
   var exports = $PS["Web.DOM.Element"];
+  var $foreign = $PS["Web.DOM.Element"];
   var Unsafe_Coerce = $PS["Unsafe.Coerce"];                   
   var toNode = Unsafe_Coerce.unsafeCoerce;
   exports["toNode"] = toNode;
+  exports["setAttribute"] = $foreign.setAttribute;
 })(PS);
 (function(exports) {
   "use strict";                                   
@@ -4890,6 +4909,20 @@ var PS = {};
   var Web_HTML_Location = $PS["Web.HTML.Location"];
   var Web_HTML_Window = $PS["Web.HTML.Window"];                
   var main = (function () {
+      var showattr = function (str) {
+          return function (able) {
+              if (able instanceof KKH_Types.None) {
+                  return "display: none;";
+              };
+              if (str === "output" && able instanceof KKH_Types.Source) {
+                  return "display: none;";
+              };
+              if (str === "source" && able instanceof KKH_Types.Output) {
+                  return "display: none;";
+              };
+              return "display: block;";
+          };
+      };
       var render = function (v) {
           return function (document) {
               return function (body) {
@@ -4906,7 +4939,7 @@ var PS = {};
                       if (v1 instanceof KKH_Types.ImageJpegOut) {
                           return Data_Newtype.unwrap(KKH_Types.newtypeBase64)(v1.value0);
                       };
-                      throw new Error("Failed pattern match at Main (line 73, column 11 - line 73, column 41): " + [ v1.constructor.name ]);
+                      throw new Error("Failed pattern match at Main (line 74, column 11 - line 74, column 41): " + [ v1.constructor.name ]);
                   };
                   var getCell = function (v1) {
                       if (v1 instanceof KKH_Types.PlainTextCell) {
@@ -4924,15 +4957,29 @@ var PS = {};
                       if (v1 instanceof KKH_Types.ImageJpegCell) {
                           return v1.value0;
                       };
-                      throw new Error("Failed pattern match at Main (line 67, column 11 - line 67, column 40): " + [ v1.constructor.name ]);
+                      throw new Error("Failed pattern match at Main (line 68, column 11 - line 68, column 40): " + [ v1.constructor.name ]);
                   };
                   var dt = function (output) {
                       return getOutput(output);
                   };
                   var cr = getCell(v);
+                  var wall = function (str) {
+                      return function __do() {
+                          var elem = Web_DOM_Document.createElement("p")(document)();
+                          Web_DOM_Element.setAttribute("id")(Data_Newtype.unwrap(KKH_Types.newtypeMD5)(cr.key))(elem)();
+                          Web_DOM_Element.setAttribute("style")(showattr(str)(cr.showable))(elem)();
+                          return Web_DOM_Element.toNode(elem);
+                      };
+                  };
                   return function __do() {
-                      var pNode = Data_Functor.map(Effect.functorEffect)(Web_DOM_Element.toNode)(Web_DOM_Document.createElement("p")(document))();
-                      return Control_Bind.bind(Effect.bindEffect)(Web_DOM_Node.appendChild(pNode)(Web_HTML_HTMLElement.toNode(body)))(Web_DOM_Node.setTextContent("hash: " + (Data_Newtype.unwrap(KKH_Types.newtypeMD5)(cr.key) + (" source: " + (cr.source + (" output: " + Data_Foldable.foldr(Data_Foldable.foldableArray)(Data_Semigroup.append(Data_Semigroup.semigroupString))("")(Data_Functor.map(Data_Functor.functorArray)(dt)(cr.outputs))))))))();
+                      var celldiv = Data_Functor.map(Effect.functorEffect)(Web_DOM_Element.toNode)(Web_DOM_Document.createElement("div")(document))();
+                      var sNode = wall("source")();
+                      Web_DOM_Node.setTextContent("source: " + cr.source)(sNode)();
+                      var oNode = wall("output")();
+                      Web_DOM_Node.setTextContent("output: " + Data_Foldable.foldr(Data_Foldable.foldableArray)(Data_Semigroup.append(Data_Semigroup.semigroupString))("")(Data_Functor.map(Data_Functor.functorArray)(dt)(cr.outputs)))(oNode)();
+                      var div = Web_DOM_Node.appendChild(celldiv)(Web_HTML_HTMLElement.toNode(body))();
+                      Data_Functor["void"](Effect.functorEffect)(Web_DOM_Node.appendChild(sNode)(div))();
+                      return Data_Functor["void"](Effect.functorEffect)(Web_DOM_Node.appendChild(oNode)(div))();
                   };
               };
           };
@@ -4962,7 +5009,7 @@ var PS = {};
                   };
                   if (maybeBody instanceof Data_Maybe.Just) {
                       return function __do() {
-                          var pNode = Data_Functor.map(Effect.functorEffect)(Web_DOM_Element.toNode)(Web_DOM_Document.createElement("p")(document))();
+                          var pNode = Data_Functor.map(Effect.functorEffect)(Web_DOM_Element.toNode)(Web_DOM_Document.createElement("h1")(document))();
                           Control_Bind.bind(Effect.bindEffect)(Web_DOM_Node.appendChild(pNode)(Web_HTML_HTMLElement.toNode(maybeBody.value0)))(Web_DOM_Node.setTextContent("KHH for IE" + (" current url: " + (url + (" hash: " + hash)))))();
                           if (result instanceof Data_Either.Left) {
                               return Effect_Class_Console.log(Effect_Class.monadEffectEffect)("GET /sample-data response failed to decode: " + Affjax.printError(result.value0))();
@@ -4979,12 +5026,12 @@ var PS = {};
                               if (v instanceof Data_Either.Left) {
                                   return Data_Semigroup_Foldable.traverse1_(Data_List_Types.foldable1NonEmptyList)(Effect.applyEffect)(Effect_Console.logShow(Foreign.showForeignError))(v.value0)();
                               };
-                              throw new Error("Failed pattern match at Main (line 58, column 13 - line 62, column 48): " + [ v.constructor.name ]);
+                              throw new Error("Failed pattern match at Main (line 59, column 13 - line 63, column 48): " + [ v.constructor.name ]);
                           };
-                          throw new Error("Failed pattern match at Main (line 54, column 9 - line 62, column 48): " + [ result.constructor.name ]);
+                          throw new Error("Failed pattern match at Main (line 55, column 9 - line 63, column 48): " + [ result.constructor.name ]);
                       };
                   };
-                  throw new Error("Failed pattern match at Main (line 47, column 16 - line 62, column 48): " + [ maybeBody.constructor.name ]);
+                  throw new Error("Failed pattern match at Main (line 48, column 16 - line 63, column 48): " + [ maybeBody.constructor.name ]);
               })());
           }))();
       };
