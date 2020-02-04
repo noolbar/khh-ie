@@ -14,9 +14,9 @@
   "devDependencies": {},
   "scripts": {
     "build": "spago bundle-app --to res/app.js",
-    "parcel": "cp -rf res/sample-data dist && parcel res/index.html --no-hmr",
-    "publish": "npm run clean && npm run build && parcel build res/index.html -d publish && cp -rf res/sample-data publish",
-    "clean": "rm -rf publish",
+    "parcel": "cp -rf res/sample-data dist && parcel serve res/index.html --no-hmr",
+    "publish": "npm run clean && npm run build && cp -rf res/sample-data public && cp -rf res/index.html public/index.html && parcel build res/app.js -d public",
+    "clean": "rm -rf public/*",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

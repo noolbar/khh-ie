@@ -9,15 +9,20 @@ import Simple.JSON (class ReadForeign, readImpl)
 
 newtype MD5 = MD5 String
 derive instance newtypeMD5 ∷ Newtype MD5 _
-
 instance readForeignMD5 ∷ ReadForeign MD5 where
   readImpl o = do
-    str :: String ← readImpl o
+    str ← readImpl o
     pure $ MD5 str
 
+type Link =
+  { title ∷ String
+  , url ∷ URL
+  }
 
 type Note' =
   { key ∷ MD5
+  , directories ∷ Array Link
+  , dependencies ∷ Array Link
   , cells ∷ Array Cell
   }
 newtype Note = Note Note'
@@ -25,12 +30,16 @@ derive instance newtypeNote :: Newtype Note _
 
 instance readForeignNote ∷ ReadForeign Note where
   readImpl o = do
-    key :: MD5 ← readImpl =<< readProp "key" o
-    cells :: (Array Cell) ← readImpl =<< readProp "cells" o
-    pure $ Note {key, cells}
+    key ∷ MD5 ← readImpl =<< readProp "key" o
+    directories ∷ (Array Link) ← readImpl =<< readProp "directories" o
+    dependencies ∷ (Array Link) ← readImpl =<< readProp "dependencies" o
+    cells ∷ (Array Cell) ← readImpl =<< readProp "cells" o
+    pure $ Note {key, directories, dependencies, cells}
 
 type NoteJson =
   { key ∷ String
+  , directories ∷ Array String
+  , dependencies ∷ Array String
   , cells ∷ Foreign
   }
 
@@ -60,7 +69,7 @@ type CellJson =
   , outputs ∷ Foreign
   }
 
-instance readForeignCell :: ReadForeign Cell where
+instance readForeignCell ∷ ReadForeign Cell where
   readImpl o = do
     { celltype, key, metadata, showable, source, outputs } ∷ CellJson ← readImpl o
     parse ∷ Array CellOutput ← readImpl outputs
@@ -88,7 +97,7 @@ data CellOutput'
   | ImageJpegOut Base64
 
 newtype Base64 = Base64 String
-derive instance newtypeBase64 :: Newtype Base64 _
+derive instance newtypeBase64 ∷ Newtype Base64 _
 
 newtype CellOutput = CellOutput CellOutput'
 
@@ -110,6 +119,12 @@ instance readForeignCellOutput ∷ ReadForeign CellOutput where
 newtype URL = URL String
 derive instance newtypeURL ∷ Newtype URL _
 
+instance readForeignURL ∷ ReadForeign URL where
+  readImpl o = do
+    str ← readImpl o
+    pure $ URL str
+
+
 type State = { url ∷ URL
              , entryPoint ∷ URL
              , hash ∷ MD5
@@ -128,6 +143,12 @@ defaultState =
 defaultNote ∷ Note
 defaultNote =
   Note  { key : MD5 "123"
+        , "directories": [{ title : "def1"
+                          , url : URL "exp2"
+                          }]
+        , "dependencies": [{ title : "def2"
+                           , url : URL "exp2"
+                          }]
         , cells :
             [ Cell $ PlainTextCell
               { metadata :  ""
