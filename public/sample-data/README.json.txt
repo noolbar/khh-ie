@@ -1,0 +1,42 @@
+{ "key": "1234abc"
+, "directories":
+  [ { "title" : "self"
+    , "url" : "#/sample-data/README.json.txt"
+    }
+  ]
+, "dependencies":
+  [ { "title" : "show jpeg"
+    , "url" : "#/sample-data/8A4626CBBFFB8CD6C029B0F9B8498970.json.txt"
+    },
+    { "title" : "show png"
+    , "url" : "#/sample-data/99E6FBEAFEABF9828BF1DF289FB49017.json.txt"
+    }
+  ]
+, "cells":
+    [
+      { "celltype": "PlainTextCell"
+      , "key": "a"
+      , "metadata": ""
+      , "showable": "SourceOutput"
+      , "source":"このセルは\"PlainTextCell\"\n記述した文章をそのまま表示します。\n以下に\"MarkDownCell\",\"CodeCell\"が表示されます。"
+      , "outputs": []
+      }
+    , { "celltype": "MarkDownCell"
+      , "key": "b"
+      , "metadata": ""
+      , "showable": "SourceOutput"
+      , "source": "---\n title: ドキュメントを記述するための Markdown の使用方法\n license: https://github.com/MicrosoftDocs/Contribute.ja-JP/raw/live/LICENSE\n ---\n \n # <a name=\"how-to-use-markdown-for-writing-docs\"></a>ドキュメントを記述するための Markdown の使用方法\n \n [docs.microsoft.com](https://docs.microsoft.com) の記事は [Markdown](https://daringfireball.net/projects/markdown/) という読みやすく、しかも簡単に学べる軽量マークアップ言語で記述されます。 そのため、これは急速に業界標準になりました。 ドキュメント サイトでは、[Markdig フレーバー](#markdown-flavor)の Markdown が使われます。\n \n \n ## <a name=\"markdown-basics\"></a>Markdown の基本\n \n ### <a name=\"headings\"></a>見出し\n \n 見出しを作成するには、ハッシュ記号 (#) を次のように使用します。\n \n``` md\n # This is heading 1\n ## This is heading 2\n ### This is heading 3\n #### This is heading 4\n```\n \n 見出しは atx 形式で作成してください。つまり、行の先頭で 1 つから 6 つまでのハッシュ文字 (#) を使用して見出しを示し、H1 から H6 までの HTML 見出しレベルに対応させます。 上の例では第 1 - 第 4 レベルのヘッダーが使用されています。\n \n トピックの第 1 レベルの見出し (H1) は 1 つだけにする**必要があります**。これはページ上のタイトルとして表示されます。\n \n 見出しが `#` 文字で終わる場合、タイトルが正しくレンダリングされるように終わりに `#` 文字を追加する必要があります。 たとえば、`# Async Programming in F# #` のようにします。\n \n 第 2 レベルの見出しによってページ上の TOC が生成されます。これはページ上のタイトルの下にある \"この記事の内容\" セクションに表示されます。\n \n ### <a name=\"bold-and-italic-text\"></a>太字や斜体のテキスト\n \n テキストの書式を**太字**に設定するには、テキストを二重のアスタリスクで囲みます。\n \n```md\n This text is **bold**.\n```\n \n テキストの書式を*斜体*に設定するには、テキストを一重のアスタリスクで囲みます。\n \n```md\n This text is *italic*.\n```\n \n テキストの書式を***太字と斜体***の両方に設定するには、テキストを三重のアスタリスクで囲みます。\n \n```md\n This is text is both ***bold and italic***.\n```\n \n ### <a name=\"blockquotes\"></a>ブロック引用\n \n ブロック引用は `>` 文字で作成されます。\n \n```md\n > The drought had lasted now for ten million years, and the reign of the terrible lizards had long since ended. Here on the Equator, in the continent which would one day be known as Africa, the battle for existence had reached a new climax of ferocity, and the victor was not yet in sight. In this barren and desiccated land, only the small or the swift or the fierce could flourish, or even hope to survive.\n```\n \n 先の例は次のようにレンダリングされます。\n \n > The drought had lasted now for ten million years, and the reign of the terrible lizards had long since ended. Here on the Equator, in the continent which would one day be known as Africa, the battle for existence had reached a new climax of ferocity, and the victor was not yet in sight. In this barren and desiccated land, only the small or the swift or the fierce could flourish, or even hope to survive.\n \n ### <a name=\"lists\"></a>リスト\n \n #### <a name=\"unordered-list\"></a>記号付きリスト\n \n 記号付きリスト/箇条書きリストの書式を設定するには、アスタリスクまたはダッシュを使用できます。 たとえば、次の Markdown 書式は\n \n```md\n - List item 1\n - List item 2\n - List item 3\n```\n \n 次のようにレンダリングされます。\n \n - List item 1\n - List item 2\n - List item 3\n \n リストを別のリスト内にネストするには、子リスト アイテムをインデントします。 たとえば、次の Markdown 書式は\n \n```md\n - List item 1\n   - List item A\n   - List item B\n - List item 2\n```\n \n 次のようにレンダリングされます。\n \n - List item 1\n   - List item A\n   - List item B\n - List item 2\n \n #### <a name=\"ordered-list\"></a>番号付きリスト\n \n 番号付きリスト/段階的リストの書式を設定するには、対応する番号を使用します。 たとえば、次の Markdown 書式は\n \n```md\n 1. First instruction\n 1. Second instruction\n 1. Third instruction\n```\n \n 次のようにレンダリングされます。\n \n 1. First instruction\n 2. Second instruction\n 3. Third instruction\n \n リストを別のリスト内にネストするには、子リスト アイテムをインデントします。 たとえば、次の Markdown 書式は\n \n```md\n 1. First instruction\n    1. Sub-instruction\n    1. Sub-instruction\n 1. Second instruction\n```\n \n 次のようにレンダリングされます。\n \n 1. First instruction\n    1. Sub-instruction\n    2. Sub-instruction\n 2. Second instruction\n \n すべてのエントリに対して '1.' を 使用していることに注目してください。 後の更新で新しい手順が追加されるときや既存の手順が削除されるとき、見直しが簡単になります。\n \n ### <a name=\"tables\"></a>表\n \n Markdown の基本仕様には表が含まれていませんが、GFM が表をサポートしています。 パイプ (|) 記号とハイフン記号 (-) を使用して表を作成できます。 ハイフンは各列のヘッダーを作成し、パイプは各列を区切ります。 表が正しくレンダリングされるように、表の前に空の行を 1 つ挿入してください。\n \n たとえば、次の Markdown 書式は\n \n```md\n| Fun                  | With                 | Tables          |\n| :------------------- | -------------------: |:---------------:|\n| left-aligned column  | right-aligned column | centered column |\n| $100                 | $100                 | $100            |\n| $10                  | $10                  | $10             |\n| $1                   | $1                   | $1              |\n```\n\nこれは次のようにレンダリングされます。\n\n| Fun                  | With                 | Tables          |\n| :------------------- | -------------------: |:---------------:|\n| left-aligned column  | right-aligned column | centered column |\n| $100                 | $100                 | $100            |\n| $10                  | $10                  | $10             |\n| $1                   | $1                   | $1              |\n \n 表作成の詳細については、以下の情報源をご覧ください。\n \n - GitHub の「[Organizing information with tables (表を使用した情報の整理)](https://help.github.com/articles/organizing-information-with-tables/)」。\n - [Markdown Tables Generator](https://www.tablesgenerator.com/markdown_tables) Web アプリ。\n - Adam Pritchard 氏の「[Markdown Cheatsheet (Markdown に関する簡易参照ガイド)](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#wiki-tables)」。\n - Michel Fortin 氏の [Markdown Extra](https://michelf.ca/projects/php-markdown/extra/#table) に関するページ。\n - [HTML テーブルからマークダウンへの変換](https://jmalarcon.github.io/markdowntables/)。\n \n ### <a name=\"links\"></a>リンク\n \n インライン リンクの Markdown 構文では、ハイパーリンクされるテキスト部分 `[link text]` の後に、リンク先 URL またはファイル名の部分 `(file-name.md)` が続きます。\n \n  `[link text](file-name.md)`\n \n リンクの詳細については、以下の情報源をご覧ください。\n \n - Markdown のリンクの基本的なサポートについては、[Markdown の構文](https://daringfireball.net/projects/markdown/syntax#link)に関するセクション。\n - Markdig で提供されるその他のリンク構文の詳細については、このガイドの[リンク](how-to-write-links.md)に関するセクション。\n \n ### <a name=\"code-snippets\"></a>コード スニペット\n \n Markdown では、コード スニペットの配置方法として、文中へのインライン配置と、文と文の間への \"フェンスされた\" 個別ブロックとしての配置の両方がサポートされます。 詳細については、以下の情報源をご覧ください。\n \n - [Markdown のコード ブロックのネイティブ サポート](https://daringfireball.net/projects/markdown/syntax#precode)に関するセクション\n - [GFM のコード フェンスと構文強調表示のサポート](https://help.github.com/articles/creating-and-highlighting-code-blocks/)に関するページ\n \n コード ブロックをフェンスすることで、コード スニペットの構文を強調表示することができます。 フェンスされたコード ブロックの一般的な書式は次のようになります。\n \n    ```alias\n     ...\n     your code goes in here\n     ...\n    ```\n "
+      , "outputs": []
+      }
+    , { "celltype": "CodeCell"
+      , "key": "c"
+      , "metadata": ""
+      , "showable": "SourceOutput"
+      , "source": "Write-Host done"
+      , "outputs":  [ { "outputtype" : "PlainTextOut"
+                      , "content" : "done"
+                      }
+                    ]
+      }
+    ]
+}

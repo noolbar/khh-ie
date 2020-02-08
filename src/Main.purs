@@ -4,6 +4,7 @@ import Prelude
 
 import Affjax as AX
 import Affjax.ResponseFormat as ResponseFormat
+import Data.Array (head)
 import Data.Either (Either(..))
 import Data.HTTP.Method (Method(..))
 import Data.Maybe (Maybe(..))
@@ -17,7 +18,8 @@ import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
 import Effect.Console (logShow)
 import Effect.Console as Console
-import KKH.Types (Cell(..), Cell'(..), CellOutput(..), CellOutput'(..), Link, Note(..), Showable(..))
+import Image.Impl (createImagedNode)
+import KKH.Types (Base64(..), Cell(..), Cell'(..), CellOutput(..), CellOutput'(..), Link, Note(..), Showable(..))
 import Simple.JSON as JSON
 import Text.Marked.Impl (appendMarkedNode)
 import Text.Marked.Types (Markdown(..))
@@ -113,21 +115,33 @@ main = do
           void $ Node.appendChild oNode cellbody
         appendCell (MarkDownCell r) cellbody = do
           void $ appendMarkedNode (Markdown r.source) document cellbody
-        appendCell (ImagePngCell r) cellbody = appendCell (PlainTextCell r) cellbody
-
-        appendCell (ImageJpegCell r) cellbody = appendCell (PlainTextCell r) cellbody
+        appendCell (ImagePngCell r) cellbody = do
+          dNode ← createImagedNode "png" (imageData $ head r.outputs) document
+          void $ Node.appendChild dNode cellbody
+        appendCell (ImageJpegCell r) cellbody =  do
+          dNode ← createImagedNode "jpeg" (imageData $ head r.outputs) document
+          void $ Node.appendChild dNode cellbody
 
         wall r str = createElement "PlainText" document >>= \elem → do
           Elem.setAttribute "id" (unwrap r.key) elem
           Elem.setAttribute "style" (showattr str r.showable) elem
           pure $ Elem.toNode elem
 
-        getOutput (PlainTextOut r) = r
-        getOutput (MarkDownOut r) = r
-        getOutput (ImagePngOut r) = unwrap r
-        getOutput (ImageJpegOut r) = unwrap r
         dt :: CellOutput → String
         dt (CellOutput output) = getOutput output
+          where
+            getOutput (PlainTextOut r) = r
+            getOutput (MarkDownOut r) = r
+            getOutput (ImagePngOut r) = unwrap r
+            getOutput (ImageJpegOut r) = unwrap r
+
+        imageData :: Maybe CellOutput → Base64
+        imageData (Just (CellOutput output)) = getOutput output
+          where
+            getOutput (ImagePngOut r) = r
+            getOutput (ImageJpegOut r) = r
+            getOutput _ = Base64 ""
+        imageData _ = Base64 ""
 
     showattr ∷ String → Showable → String
     showattr str able = case str, able of
@@ -145,3 +159,4 @@ main = do
       div ← Elem.toNode <$> createElement "div" document
       void $ Node.appendChild div node >>=
               Node.appendChild ref
+
