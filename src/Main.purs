@@ -114,7 +114,8 @@ main = do
           void $ Node.appendChild sNode cellbody
           void $ Node.appendChild oNode cellbody
         appendCell (MarkDownCell r) cellbody = do
-          void $ appendMarkedNode (Markdown r.source) document cellbody
+          let mark = foldr (<>) "" (map dt r.outputs)
+          void $ appendMarkedNode (Markdown mark) document cellbody
         appendCell (ImagePngCell r) cellbody = do
           dNode ← createImagedNode "png" (imageData $ head r.outputs) document
           void $ Node.appendChild dNode cellbody

@@ -5170,7 +5170,7 @@ var PS = {};
                           if (v2 instanceof KKH_Types.ImageJpegOut) {
                               return Data_Newtype.unwrap(KKH_Types.newtypeBase64)(v2.value0);
                           };
-                          throw new Error("Failed pattern match at Main (line 133, column 13 - line 133, column 43): " + [ v2.constructor.name ]);
+                          throw new Error("Failed pattern match at Main (line 134, column 13 - line 134, column 43): " + [ v2.constructor.name ]);
                       };
                       return getOutput(v1);
                   };
@@ -5194,7 +5194,8 @@ var PS = {};
                               };
                           };
                           if (v1 instanceof KKH_Types.MarkDownCell) {
-                              return Data_Functor["void"](Effect.functorEffect)(Text_Marked_Impl.appendMarkedNode(v1.value0.source)(document)(cellbody));
+                              var mark = Data_Foldable.foldr(Data_Foldable.foldableArray)(Data_Semigroup.append(Data_Semigroup.semigroupString))("")(Data_Functor.map(Data_Functor.functorArray)(dt)(v1.value0.outputs));
+                              return Data_Functor["void"](Effect.functorEffect)(Text_Marked_Impl.appendMarkedNode(mark)(document)(cellbody));
                           };
                           if (v1 instanceof KKH_Types.ImagePngCell) {
                               return function __do() {
